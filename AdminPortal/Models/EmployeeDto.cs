@@ -1,12 +1,10 @@
-﻿namespace AdminPortal.Models.Entities
+﻿namespace AdminPortal.Models
 {
-    public class Employee
+    public class EmployeeDto
     {
-        public Guid Id { get; set; }
         public required string Name { get; set; }
         public required string Email { get; set; }
-        public  string? Phone { get; set; }
+        public string? Phone { get; set; }
         public decimal Salary { get; set; }
-
     }
 }
