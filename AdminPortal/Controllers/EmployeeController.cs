@@ -1,5 +1,5 @@
 ﻿using AdminPortal.Data;
-using AdminPortal.Models;
+using AdminPortal.Models.DTOs;
 using AdminPortal.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
