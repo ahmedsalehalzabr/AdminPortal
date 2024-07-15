@@ -1,4 +1,5 @@
 using AdminPortal.Data;
+using AdminPortal.Mappings;
 using AdminPortal.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,8 @@ builder.Services.AddDbContext<AppDbContext>(op =>
       op.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+
+builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 
 var app = builder.Build();
 
