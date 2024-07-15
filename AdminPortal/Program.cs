@@ -18,6 +18,7 @@ builder.Services.AddDbContext<AppDbContext>(op =>
       op.UseSqlServer(builder.Configuration.GetConnectionString("myCon")));
 
 builder.Services.AddScoped<IRegionRepository, RegionRepository>();
+builder.Services.AddScoped<IWalkRepositery, WalkRepository > ();
 
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 

@@ -10,6 +10,9 @@ namespace AdminPortal.Mappings
         {
             CreateMap<Region, RegionDto>().ReverseMap();
             CreateMap<ElRegionDto, Region> ().ReverseMap();
+            CreateMap<ElWalkDto, Walk>().ReverseMap();
+            CreateMap<Walk, WalkDto>().ReverseMap();
+            CreateMap<Difficulty, DifficultyDto>().ReverseMap();
         }
     }
 
