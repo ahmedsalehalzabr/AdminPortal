@@ -26,7 +26,7 @@ namespace AdminPortal.Controllers
 
             //Map domain models to Dto
             var regionDto = new List<RegionDto>();
-                foreach (var region in regionDomain)
+            foreach (var region in regionDomain)
             {
                 regionDto.Add(new RegionDto()
                 {
@@ -38,12 +38,12 @@ namespace AdminPortal.Controllers
                 });
 
             }
-                //return Dto back to client
+            //return Dto back to client
             return Ok(regionDto);
         }
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetById([FromRoute] Guid id) 
+        public IActionResult GetById([FromRoute] Guid id)
         {
             // var regions = db.Regions.Find(id);
             var regionDomain = db.Regions.FirstOrDefault(x => x.Id == id);
@@ -55,20 +55,20 @@ namespace AdminPortal.Controllers
 
             var regionDto = new RegionDto
             {
-                Id=regionDomain.Id,
+                Id = regionDomain.Id,
                 Code = regionDomain.Code,
                 Name = regionDomain.Name,
                 RegionImageUrl = regionDomain.RegionImageUrl,
 
             };
-             
+
             return Ok(regionDto);
 
 
         }
 
         [HttpPost]
-        public IActionResult AddRegion(ElRegionDto dto)
+        public IActionResult AddRegion([FromBody] ElRegionDto dto)
         {
             var region = new Region()
             {
@@ -104,6 +104,62 @@ namespace AdminPortal.Controllers
 
         //    return Ok(region);
         //}
+
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute] Guid id, [FromBody] ElRegionDto dto)
+        {
+            // Check if region exists
+            var regionDomainModel = db.Regions.FirstOrDefault(x => x.Id == id);
+
+            if(regionDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            regionDomainModel.Code = dto.Code;
+            regionDomainModel.Name = dto.Name;
+            regionDomainModel.RegionImageUrl = dto.RegionImageUrl;
+
+            db.SaveChanges();
+
+            // convert domain model to Dto
+            var regionDto = new RegionDto
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return Ok(regionDto);
+
+        }
+
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var regionDomainModel = db.Regions.FirstOrDefault(x =>x.Id == id);
+            if(regionDomainModel == null)
+            {
+                return NotFound();
+            }
+            db.Regions.Remove(regionDomainModel);
+            db.SaveChanges();
+
+            //return delete region back
+            // map domain model to Dto
+            var regionDto = new RegionDto
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return Ok(regionDto);
+        }
 
     }
 }
