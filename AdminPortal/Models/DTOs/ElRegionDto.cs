@@ -1,6 +1,6 @@
 ﻿namespace AdminPortal.Models.DTOs
 {
-    public class AddRegionDto
+    public class ElRegionDto
     {
         public string Code { get; set; }
         public string Name { get; set; }
