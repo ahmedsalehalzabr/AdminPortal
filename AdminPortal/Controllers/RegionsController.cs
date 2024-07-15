@@ -3,6 +3,7 @@ using AdminPortal.Models.DTOs;
 using AdminPortal.Models.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace AdminPortal.Controllers
 {
@@ -19,10 +20,10 @@ namespace AdminPortal.Controllers
 
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             // get data from database - domain models
-            var regionDomain = db.Regions.ToList();
+            var regionDomain = await db.Regions.ToListAsync();
 
             //Map domain models to Dto
             var regionDto = new List<RegionDto>();
@@ -41,12 +42,14 @@ namespace AdminPortal.Controllers
             //return Dto back to client
             return Ok(regionDto);
         }
+
+
         [HttpGet]
         [Route("{id:Guid}")]
-        public IActionResult GetById([FromRoute] Guid id)
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
         {
             // var regions = db.Regions.Find(id);
-            var regionDomain = db.Regions.FirstOrDefault(x => x.Id == id);
+            var regionDomain = await db.Regions.FirstOrDefaultAsync(x => x.Id == id);
             if (regionDomain == null)
             {
                 return NotFound();
@@ -68,7 +71,7 @@ namespace AdminPortal.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddRegion([FromBody] ElRegionDto dto)
+        public async Task<IActionResult> AddRegion([FromBody] ElRegionDto dto)
         {
             var region = new Region()
             {
@@ -76,8 +79,8 @@ namespace AdminPortal.Controllers
                 Name = dto.Name,
                 RegionImageUrl = dto.RegionImageUrl,
             };
-            db.Regions.Add(region);
-            db.SaveChanges();
+          await  db.Regions.AddAsync(region);
+          await  db.SaveChangesAsync();
 
             var regionDto = new RegionDto
             {
@@ -107,10 +110,10 @@ namespace AdminPortal.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public IActionResult Update([FromRoute] Guid id, [FromBody] ElRegionDto dto)
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ElRegionDto dto)
         {
             // Check if region exists
-            var regionDomainModel = db.Regions.FirstOrDefault(x => x.Id == id);
+            var regionDomainModel = await db.Regions.FirstOrDefaultAsync(x => x.Id == id);
 
             if(regionDomainModel == null)
             {
@@ -121,7 +124,7 @@ namespace AdminPortal.Controllers
             regionDomainModel.Name = dto.Name;
             regionDomainModel.RegionImageUrl = dto.RegionImageUrl;
 
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             // convert domain model to Dto
             var regionDto = new RegionDto
@@ -138,15 +141,15 @@ namespace AdminPortal.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
-        public IActionResult Delete([FromRoute] Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-            var regionDomainModel = db.Regions.FirstOrDefault(x =>x.Id == id);
+            var regionDomainModel = await db.Regions.FirstOrDefaultAsync(x =>x.Id == id);
             if(regionDomainModel == null)
             {
                 return NotFound();
             }
             db.Regions.Remove(regionDomainModel);
-            db.SaveChanges();
+            await db.SaveChangesAsync();
 
             //return delete region back
             // map domain model to Dto
