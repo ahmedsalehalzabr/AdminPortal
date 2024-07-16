@@ -82,27 +82,34 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRegion([FromBody] ElRegionDto dto)
         {
-            //var region = new Region
-            //{
-            //    Code = dto.Code,
-            //    Name = dto.Name,
-            //    RegionImageUrl = dto.RegionImageUrl,
-            //};
+            if (ModelState.IsValid)
+            {
+                //var region = new Region
+                //{
+                //    Code = dto.Code,
+                //    Name = dto.Name,
+                //    RegionImageUrl = dto.RegionImageUrl,
+                //};
 
-            var region = mapper.Map<Region>(dto);
+                var region = mapper.Map<Region>(dto);
 
-            region = await regionRepository.CreateAsync(region);
+                region = await regionRepository.CreateAsync(region);
 
-            //var regionDto = new RegionDto
-            //{
-            //    Id = region.Id,
-            //    Code = region.Code,
-            //    Name = region.Name,
-            //    RegionImageUrl = region.RegionImageUrl,
-            //};
-            var regionDto = mapper.Map<RegionDto>(region);
-            // هذا يرجع رابط للعميل وكذالك 201
-            return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+                //var regionDto = new RegionDto
+                //{
+                //    Id = region.Id,
+                //    Code = region.Code,
+                //    Name = region.Name,
+                //    RegionImageUrl = region.RegionImageUrl,
+                //};
+                var regionDto = mapper.Map<RegionDto>(region);
+                // هذا يرجع رابط للعميل وكذالك 201
+                return CreatedAtAction(nameof(GetById), new { id = regionDto.Id }, regionDto);
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
     
@@ -110,33 +117,39 @@ namespace AdminPortal.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ElRegionDto dto)
         {
-            //var regionDomainModel = new Region
-            //{
-            //    Code = dto.Code,
-            //    Name = dto.Name,
-            //    RegionImageUrl = dto.RegionImageUrl,
-            //};
-            var regionDomainModel = mapper.Map<Region>(dto);
-            // Check if region exists
-            regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
-
-            if(regionDomainModel == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                //var regionDomainModel = new Region
+                //{
+                //    Code = dto.Code,
+                //    Name = dto.Name,
+                //    RegionImageUrl = dto.RegionImageUrl,
+                //};
+                var regionDomainModel = mapper.Map<Region>(dto);
+                // Check if region exists
+                regionDomainModel = await regionRepository.UpdateAsync(id, regionDomainModel);
+
+                if (regionDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+
+                // convert domain model to Dto
+                //var regionDto = new RegionDto
+                //{
+                //    Id = regionDomainModel.Id,
+                //    Code = regionDomainModel.Code,
+                //    Name = regionDomainModel.Name,
+                //    RegionImageUrl = regionDomainModel.RegionImageUrl,
+                //};
+                var regionDto = mapper.Map<RegionDto>(regionDomainModel);
+                return Ok(regionDto);
             }
-
-
-            // convert domain model to Dto
-            //var regionDto = new RegionDto
-            //{
-            //    Id = regionDomainModel.Id,
-            //    Code = regionDomainModel.Code,
-            //    Name = regionDomainModel.Name,
-            //    RegionImageUrl = regionDomainModel.RegionImageUrl,
-            //};
-            var regionDto = mapper.Map<RegionDto>(regionDomainModel);
-            return Ok(regionDto);
-
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
 
         [HttpDelete]

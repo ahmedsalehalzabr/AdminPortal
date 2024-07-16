@@ -44,13 +44,18 @@ namespace AdminPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] ElWalkDto dto)
         {
-            var walkDomainModel = mapper.Map<Walk>(dto);
+           if (ModelState.IsValid)
+            {
+                var walkDomainModel = mapper.Map<Walk>(dto);
 
-            walkDomainModel = await walkRepositery.CreateAsync(walkDomainModel);
+                walkDomainModel = await walkRepositery.CreateAsync(walkDomainModel);
 
-            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+                var walkDto = mapper.Map<WalkDto>(walkDomainModel);
 
-            return Ok(walkDto);
+                return Ok(walkDto);
+            }
+
+           return BadRequest(ModelState);
         }
 
         [HttpPut]
@@ -58,18 +63,23 @@ namespace AdminPortal.Controllers
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ElWalkDto dto)
         {
 
-            var walkDomainModel = mapper.Map < Walk>(dto);
-            // Check if region exists
-            walkDomainModel = await walkRepositery.UpdateAsync(id, walkDomainModel);
-
-            if (walkDomainModel == null)
+           if (ModelState.IsValid)
             {
-                return NotFound();
+                var walkDomainModel = mapper.Map<Walk>(dto);
+                // Check if region exists
+                walkDomainModel = await walkRepositery.UpdateAsync(id, walkDomainModel);
+
+                if (walkDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+
+                var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+                return Ok(walkDto);
             }
 
-
-            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
-            return Ok(walkDto);
+           return BadRequest(ModelState);
 
         }
 
