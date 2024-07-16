@@ -1,4 +1,5 @@
-﻿using AdminPortal.Models.DTOs;
+﻿using AdminPortal.CustomActionFilters;
+using AdminPortal.Models.DTOs;
 using AdminPortal.Models.Entities;
 using AdminPortal.Repositories;
 using AutoMapper;
@@ -42,44 +43,36 @@ namespace AdminPortal.Controllers
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] ElWalkDto dto)
         {
-           if (ModelState.IsValid)
-            {
-                var walkDomainModel = mapper.Map<Walk>(dto);
+            var walkDomainModel = mapper.Map<Walk>(dto);
 
-                walkDomainModel = await walkRepositery.CreateAsync(walkDomainModel);
+            walkDomainModel = await walkRepositery.CreateAsync(walkDomainModel);
 
-                var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
 
-                return Ok(walkDto);
-            }
-
-           return BadRequest(ModelState);
+            return Ok(walkDto);
         }
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] ElWalkDto dto)
         {
 
-           if (ModelState.IsValid)
+            var walkDomainModel = mapper.Map < Walk>(dto);
+            // Check if region exists
+            walkDomainModel = await walkRepositery.UpdateAsync(id, walkDomainModel);
+
+            if (walkDomainModel == null)
             {
-                var walkDomainModel = mapper.Map<Walk>(dto);
-                // Check if region exists
-                walkDomainModel = await walkRepositery.UpdateAsync(id, walkDomainModel);
-
-                if (walkDomainModel == null)
-                {
-                    return NotFound();
-                }
-
-
-                var walkDto = mapper.Map<WalkDto>(walkDomainModel);
-                return Ok(walkDto);
+                return NotFound();
             }
 
-           return BadRequest(ModelState);
+
+            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+            return Ok(walkDto);
 
         }
 
