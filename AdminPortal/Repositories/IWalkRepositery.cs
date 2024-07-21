@@ -4,7 +4,7 @@ namespace AdminPortal.Repositories
 {
     public interface IWalkRepositery
     {
-        Task<List<Walk>> GetAllAsync();
+        Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null);
         Task<Walk?> GetByIdAsync(Guid id);
         Task<Walk> CreateAsync(Walk walk);
 

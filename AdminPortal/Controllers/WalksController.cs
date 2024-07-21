@@ -21,10 +21,11 @@ namespace AdminPortal.Controllers
         }
 
 
+        // Get: /api/walks?filterOn=Name&filterQuery=Track
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
         {
-            var walkDomainModel = await walkRepositery.GetAllAsync();
+            var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery);
             var walkDto = mapper.Map<List<WalkDto>>(walkDomainModel);
             return Ok(walkDto);
         }
@@ -40,6 +41,7 @@ namespace AdminPortal.Controllers
 
             var walkDto = mapper.Map<WalkDto>(walkDomainModel);
             return Ok(walkDto);
+           
         }
 
         [HttpPost]

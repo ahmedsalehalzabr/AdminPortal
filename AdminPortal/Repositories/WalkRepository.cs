@@ -24,9 +24,21 @@ namespace AdminPortal.Repositories
             
         }
 
-        public async Task<List<Walk>> GetAllAsync()
+        public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null)
         {
-            return await appDbContext.Walks.Include(x => x.Difficulty).Include(x => x.Region).ToListAsync();
+            var walk = appDbContext.Walks.Include(x => x.Difficulty).Include(x => x.Region).AsQueryable();
+
+            //Filtering 
+            if(string.IsNullOrWhiteSpace(filterOn) == false && string.IsNullOrWhiteSpace(filterQuery) == false)
+            {
+                if(filterOn.Equals("Name", StringComparison.OrdinalIgnoreCase))
+                {
+                    walk = walk.Where(x => x.Name.Contains(filterQuery));
+                }
+            }
+
+            return await walk.ToListAsync();
+          //  return await appDbContext.Walks.Include(x => x.Difficulty).Include(x => x.Region).ToListAsync();
         }
 
         public async Task<Walk?> GetByIdAsync(Guid id)
@@ -53,6 +65,7 @@ namespace AdminPortal.Repositories
             await appDbContext.SaveChangesAsync();
             return existingWalk;
         }
+       
 
 
         public async Task<Walk?> DeleteAsync(Guid id)
