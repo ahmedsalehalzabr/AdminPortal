@@ -25,7 +25,7 @@ namespace AdminPortal.Repositories
         }
 
         public async Task<List<Walk>> GetAllAsync(string? filterOn = null, string? filterQuery = null,
-            string? sortBy = null, bool isAscending = true)
+            string? sortBy = null, bool isAscending = true, int pageNumber = 1, int pageSize = 1000)
         {
             var walk = appDbContext.Walks.Include(x => x.Difficulty).Include(x => x.Region).AsQueryable();
 
@@ -38,7 +38,7 @@ namespace AdminPortal.Repositories
                 }
             }
 
-            //Sorting 
+            //Sorting يرتب حسب الابجديه او الارقام 
             if (string.IsNullOrWhiteSpace(sortBy) == false)
             {
                 if (sortBy.Equals("Name", StringComparison.OrdinalIgnoreCase))
@@ -51,7 +51,10 @@ namespace AdminPortal.Repositories
                 }
             }
 
-            return await walk.ToListAsync();
+            //Pagination تحدد كم رقم يطلع من api
+            var skipResults = (pageNumber - 1) * pageSize;
+
+            return await walk.Skip(skipResults).Take(pageSize).ToListAsync();
           //  return await appDbContext.Walks.Include(x => x.Difficulty).Include(x => x.Region).ToListAsync();
         }
 
