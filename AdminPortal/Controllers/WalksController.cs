@@ -20,12 +20,14 @@ namespace AdminPortal.Controllers
             this.walkRepositery = walkRepositery;
         }
 
-
-        // Get: /api/walks?filterOn=Name&filterQuery=Track
+        // Sort => retrive data from database عمل السورت استرجاع البيانات من قاعدة البيانات
+        // Get: /api/walks?filterOn=Name&filterQuery=Track&sortBy=Name$isAscending=true
+        // Ascending ترتيب تصاعدي
         [HttpGet]
-        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery)
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending)
         {
-            var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery);
+            var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery , sortBy , isAscending ?? true);
             var walkDto = mapper.Map<List<WalkDto>>(walkDomainModel);
             return Ok(walkDto);
         }
