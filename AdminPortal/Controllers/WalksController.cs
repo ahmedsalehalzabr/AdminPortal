@@ -33,7 +33,7 @@ namespace AdminPortal.Controllers
             var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery,
               sortBy, isAscending ?? true, pageNumber, pageSize);
 
-            throw new Exception("fuck you");
+           // throw new Exception("fuck you");
            
             return Ok(mapper.Map<List<WalkDto>>(walkDomainModel));
 

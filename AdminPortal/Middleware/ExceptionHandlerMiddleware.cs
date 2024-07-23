@@ -3,6 +3,7 @@ using System.Net;
 
 namespace AdminPortal.Middleware
 {
+    //هذا يساعد في تقديم تجربة مستخدم أفضل وتسجيل الأخطاء بشكل أفضل لإصلاحها لاحقًا
     public class ExceptionHandlerMiddleware
     {
         private readonly ILogger<ExceptionHandlerMiddleware> logger;
