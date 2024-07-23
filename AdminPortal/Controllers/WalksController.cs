@@ -5,6 +5,7 @@ using AdminPortal.Repositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 
 namespace AdminPortal.Controllers
 {
@@ -28,10 +29,27 @@ namespace AdminPortal.Controllers
             [FromQuery] string? sortBy, [FromQuery] bool? isAscending,
             [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 1000)
         {
-            var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery ,
-                sortBy , isAscending ?? true, pageNumber, pageSize);
-            var walkDto = mapper.Map<List<WalkDto>>(walkDomainModel);
-            return Ok(walkDto);
+
+            var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery,
+              sortBy, isAscending ?? true, pageNumber, pageSize);
+
+            throw new Exception("fuck you");
+           
+            return Ok(mapper.Map<List<WalkDto>>(walkDomainModel));
+
+            //try
+            //{
+            //    var walkDomainModel = await walkRepositery.GetAllAsync(filterOn, filterQuery,
+            //    sortBy, isAscending ?? true, pageNumber, pageSize);
+            //    var walkDto = mapper.Map<List<WalkDto>>(walkDomainModel);
+            //    return Ok(walkDto);
+            //}
+            //catch (Exception ex)
+            //{
+            //    return Problem("Something went wrong", null, (int)HttpStatusCode.InternalServerError)
+            //}
+
+
         }
         [HttpGet]
         [Route("{id:Guid}")]

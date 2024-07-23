@@ -1,7 +1,9 @@
 using AdminPortal.Data;
 using AdminPortal.Mappings;
+using AdminPortal.Middleware;
 using AdminPortal.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -16,7 +18,8 @@ var builder = WebApplication.CreateBuilder(args);
 // ÊÂ–« Ì”«⁄œ ›Ì „—«ﬁ»… «·√œ«¡° «ﬂ ‘«› «·√Œÿ«¡° Ê Õ·Ì· «” Œœ«„ «· ÿ»Ìﬁ.ÊÌŸÂ— ⁄·Ï «·ﬂÊ‰”·
 var logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .MinimumLevel.Information()
+    .WriteTo.File("Logs/AdminPortal_Log.txt", rollingInterval:RollingInterval.Minute)
+    .MinimumLevel.Warning()
     .CreateLogger();
 
 builder.Logging.ClearProviders();
@@ -82,6 +85,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+app.UseMiddleware<AdminPortal.Middleware.ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 
