@@ -6,11 +6,21 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// ÊÂ–« Ì”«⁄œ ›Ì „—«ﬁ»… «·√œ«¡° «ﬂ ‘«› «·√Œÿ«¡° Ê Õ·Ì· «” Œœ«„ «· ÿ»Ìﬁ.ÊÌŸÂ— ⁄·Ï «·ﬂÊ‰”·
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .MinimumLevel.Information()
+    .CreateLogger();
+
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
@@ -78,7 +88,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-
+//Serving Static Files  Œœ„… «·„·›«  «·À«» Â 
 // Ìÿ·⁄ «·’Ê—Â »«·—«»ÿ  »⁄Â« ›Ì «·„ ’›Õ
 app.UseStaticFiles(new StaticFileOptions
 {

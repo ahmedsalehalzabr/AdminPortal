@@ -4,9 +4,11 @@ using AdminPortal.Models.DTOs;
 using AdminPortal.Models.Entities;
 using AdminPortal.Repositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Text.Json;
 
 namespace AdminPortal.Controllers
 {
@@ -18,20 +20,27 @@ namespace AdminPortal.Controllers
         
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
-        public RegionsController(IRegionRepository regionRepository,IMapper mapper)
+        private readonly ILogger<RegionsController> logger;
+
+        public RegionsController(IRegionRepository regionRepository,
+            IMapper mapper,
+            ILogger<RegionsController> logger)
         {
             
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
 
         [HttpGet]
+       // [Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
+            logger.LogInformation("GetAllRegion Action method was invoked");
             // get data from database - domain models
             var regionDomain = await regionRepository.GetAllAsync();
-
+            logger.LogInformation($"Finished GetAllRegion request with data: {JsonSerializer.Serialize(regionDomain)}");
             //Map domain models to Dto
             //var regionDto = new List<RegionDto>();
             //foreach (var region in regionDomain)
