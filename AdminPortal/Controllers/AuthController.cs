@@ -70,6 +70,7 @@ namespace AdminPortal.Controllers
                             JwtToken = jwtToken,
                         };
                         return Ok(response);
+                        
                     }
                 }
             }
