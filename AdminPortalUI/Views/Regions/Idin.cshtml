@@ -1,0 +1,19 @@
+﻿@model AdminPortalUI.Models.DTO.RegionDto
+
+<div class="container">
+    @if (Model != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Name</h5>
+                <p class="card-text">Code: @Model.Code</p>
+                <p class="card-text">Description: @Model.Name</p>
+                <img src="@Model.RegionImageUrl" alt="@Model.RegionImageUrl" class="img-fluid" />
+            </div>
+        </div>
+    }ذ
+    else
+    {
+        <p>No region found.</p>
+    }
+</div>

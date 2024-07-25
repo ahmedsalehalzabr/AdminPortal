@@ -1,35 +1,34 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AdminPortalUI.Models;
+using AdminPortalUI.Models.DTO;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text;
-using AdminPortalUI.Models.DTO;
-using AdminPortalUI.Models;
 
 namespace AdminPortalUI.Controllers
 {
-    public class RegionsController : Controller
+    public class WalkController : Controller
     {
         private readonly IHttpClientFactory httpClientFactory;
 
-        public RegionsController(IHttpClientFactory httpClientFactory)
+        public WalkController(IHttpClientFactory httpClientFactory)
         {
             this.httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet]
         public async Task<IActionResult> Index()
         {
-            List<RegionDto> response = new List<RegionDto>();
+            List<WalkDto> response = new List<WalkDto>();
 
             try
             {
                 // Get All Regions from Web API
                 var client = httpClientFactory.CreateClient();
 
-                var httpResponseMessage = await client.GetAsync("https://localhost:7044/api/Regions");
+                var httpResponseMessage = await client.GetAsync("https://localhost:7044/api/Walks?pageNumber=1&pageSize=1000");
 
                 httpResponseMessage.EnsureSuccessStatusCode();
 
-                response.AddRange(await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<RegionDto>>());
+                response.AddRange(await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<WalkDto>>());
             }
             catch (Exception ex)
             {
@@ -38,38 +37,6 @@ namespace AdminPortalUI.Controllers
 
             return View(response);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Index(Guid id)
-        {
-            RegionDto response = null;
-
-            try
-            {
-                // Get Region by Id from Web API
-                var client = httpClientFactory.CreateClient();
-
-                var httpResponseMessage = await client.GetAsync($"https://localhost:7044/api/Regions/{id}");
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    response = await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
-                }
-                else
-                {
-                    // Log the response status code or handle it as needed
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-            }
-
-            return View(response);
-        }
-
-       
-     
 
 
         [HttpGet]
@@ -80,37 +47,35 @@ namespace AdminPortalUI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(AddRegionViewModel model)
+        public async Task<IActionResult> Add(AddWalksViewModel model)
         {
             var client = httpClientFactory.CreateClient();
 
             var httpRequestMessage = new HttpRequestMessage()
             {
                 Method = HttpMethod.Post,
-                RequestUri = new Uri("https://localhost:7044/api/Regions"),
+                RequestUri = new Uri("https://localhost:7044/api/Walks"),
                 Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
             };
 
             var httpResponseMessage = await client.SendAsync(httpRequestMessage);
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var respose = await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
+            var respose = await httpResponseMessage.Content.ReadFromJsonAsync<WalkDto>();
 
             if (respose is not null)
             {
-                return RedirectToAction("Index", "Regions");
+                return RedirectToAction("Index", "Walk");
             }
 
             return View();
         }
-
-
         [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
             var client = httpClientFactory.CreateClient();
 
-            var response = await client.GetFromJsonAsync<RegionDto>($"https://localhost:7044/api/Regions/{id.ToString()}");
+            var response = await client.GetFromJsonAsync<WalkDto>($"https://localhost:7044/api/Walks/{id.ToString()}");
 
             if (response is not null)
             {
@@ -122,25 +87,25 @@ namespace AdminPortalUI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Edit(RegionDto request)
+        public async Task<IActionResult> Edit(WalkDto request)
         {
             var client = httpClientFactory.CreateClient();
 
             var httpRequestMessage = new HttpRequestMessage()
             {
                 Method = HttpMethod.Put,
-                RequestUri = new Uri($"https://localhost:7044/api/Regions/{request.Id}"),
+                RequestUri = new Uri($"https://localhost:7044/api/Walks/{request.Id}"),
                 Content = new StringContent(JsonSerializer.Serialize(request), Encoding.UTF8, "application/json")
             };
 
             var httpResponseMessage = await client.SendAsync(httpRequestMessage);
             httpResponseMessage.EnsureSuccessStatusCode();
 
-            var respose = await httpResponseMessage.Content.ReadFromJsonAsync<RegionDto>();
+            var respose = await httpResponseMessage.Content.ReadFromJsonAsync<WalkDto>();
 
             if (respose is not null)
             {
-                return RedirectToAction("Edit", "Regions");
+                return RedirectToAction("Edit", "Walk");
             }
 
             return View();
@@ -148,17 +113,17 @@ namespace AdminPortalUI.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Delete(RegionDto request)
+        public async Task<IActionResult> Delete(WalkDto request)
         {
             try
             {
                 var client = httpClientFactory.CreateClient();
 
-                var httpResponseMessage = await client.DeleteAsync($"https://localhost:7044/api/Regions/{request.Id}");
+                var httpResponseMessage = await client.DeleteAsync($"https://localhost:7044/api/Walks/{request.Id}");
 
                 httpResponseMessage.EnsureSuccessStatusCode();
 
-                return RedirectToAction("Index", "Regions");
+                return RedirectToAction("Index", "Walk");
             }
             catch (Exception ex)
             {

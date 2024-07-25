@@ -1,0 +1,38 @@
+﻿@model IEnumerable<AdminPortalUI.Models.DTO.WalkDto>
+@{
+}
+
+<h1 class="mt-3">Walks</h1>
+
+<div class="d-flex justify-content-end">
+    <a class="btn btn-secondary" asp-controller="Walk" asp-action="Add">Add Walks</a>
+</div>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Id</th>
+           
+            <th>Name</th>
+            <th>Description</th>
+            <th>LengthInKm </th>
+            <th> </th>
+
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var walkd in Model)
+        {
+            <tr>
+                <td>@walkd.Id</td>
+                <td>@walkd.Name</td>
+                <td>@walkd.Description</td>
+                <td>@walkd.LengthInKm</td>
+                <td>
+                    <a asp-controller="Walk" asp-action="Edit" asp-route-id="@walkd.Id"
+                       class="btn btn-success">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

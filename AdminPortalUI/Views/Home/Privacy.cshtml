@@ -1,6 +1,30 @@
-﻿@{
-    ViewData["Title"] = "Privacy Policy";
-}
-<h1>@ViewData["Title"]</h1>
+﻿@model AdminPortalUI.Models.DTO.WalkDto
 
-<p>Use this page to detail your site's privacy policy.</p>
+@{
+}
+
+
+
+
+@if (Model is not null)
+{
+    <form method="post">
+        <div class="mt-3">
+            <label class="form-label">Id</label>
+            <input type="text" class="form-control" asp-for="Region.Id" readonly />
+        </div>
+
+        <div class="mt-3">
+            <label class="form-label">Name</label>
+            <input type="text" class="form-control" asp-for="Region.Name" />
+        </div>
+        <div class="mt-3">
+            <label class="form-label">Description</label>
+            <input type="text" class="form-control" asp-for="Region.Code" />
+        </div>
+   
+
+       
+
+    </form>
+}

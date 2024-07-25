@@ -1,32 +1,38 @@
-using AdminPortalUI.Models;
+using AdminPortalUI.Models.DTO;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
 
 namespace AdminPortalUI.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly IHttpClientFactory httpClientFactory; 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(IHttpClientFactory httpClientFactory)
         {
-            _logger = logger;
+            this.httpClientFactory = httpClientFactory;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            List<WalkDto> response = new List<WalkDto>();
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
+            try
+            {
+                // Get All Regions from Web API
+                var client = httpClientFactory.CreateClient();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+                var httpResponseMessage = await client.GetAsync("https://localhost:7044/api/Walks?pageNumber=1&pageSize=1000");
+
+                httpResponseMessage.EnsureSuccessStatusCode();
+
+                response.AddRange(await httpResponseMessage.Content.ReadFromJsonAsync<IEnumerable<WalkDto>>());
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+            }
+
+            return View(response);
         }
     }
 }
