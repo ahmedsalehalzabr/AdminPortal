@@ -30,7 +30,7 @@ namespace AdminPortal.Controllers
         public IActionResult GetEmployeeById(Guid id)
         {
             var employee = db.Employees.Find(id);
-            if(employee is null)
+            if (employee is null)
             {
                 return NotFound();
             }
@@ -43,7 +43,7 @@ namespace AdminPortal.Controllers
         {
             var employeeEntity = new Employee()
             {
-           
+
                 Name = employeeDto.Name,
                 Email = employeeDto.Email,
                 Phone = employeeDto.Phone,
@@ -57,14 +57,14 @@ namespace AdminPortal.Controllers
 
         [HttpPut]
         [Route("{id:guid}")]
-        public IActionResult UpdateEmployee(Guid id,UpdateEmployeeDto updateEmployeeDto)
+        public IActionResult UpdateEmployee(Guid id, UpdateEmployeeDto updateEmployeeDto)
         {
             var employee = db.Employees.Find(id);
-            if(employee is null)
+            if (employee is null)
             {
                 return NotFound();
             }
-            
+
             employee.Name = updateEmployeeDto.Name;
             employee.Email = updateEmployeeDto.Email;
             employee.Phone = updateEmployeeDto.Phone;
@@ -81,7 +81,7 @@ namespace AdminPortal.Controllers
         {
             var employee = db.Employees.Find(id);
 
-            if(employee is null)
+            if (employee is null)
             {
                 return NotFound();
             }

@@ -40,7 +40,7 @@ namespace AdminPortalUI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Index(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
             RegionDto response = null;
 
@@ -68,8 +68,8 @@ namespace AdminPortalUI.Controllers
             return View(response);
         }
 
-       
-     
+
+
 
 
         [HttpGet]
